@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
-import './App.css';
-import './index.css';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Pages
 import Navbar from './pages/Navbar';
 import Footer from "./pages/Footer";
 import HomePage from './pages/Home/HomePage';
@@ -13,73 +11,116 @@ import CustomerPage from './pages/Customer/CustomerPage';
 import ReportPage from './pages/Reports/ReportPage';
 import Dashboard from './pages/Dashboards/Dashboard';
 import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';        // ← Add this page
 import SencerPage from './pages/Sencer/SencerPage';
 
-// ✅ Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const [isAuthorized, setIsAuthorized] = useState(null);
+import "./App.css";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-  useEffect(() => {
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setIsAuthorized(false);
-      return;
+        return <Navigate to="/login" replace />;
     }
 
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      const isExpired = Date.now() > payload.exp * 1000;
-
-      if (isExpired) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setIsAuthorized(false);
-      } else {
-        setIsAuthorized(true);
-      }
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (Date.now() > payload.exp * 1000) {
+            localStorage.clear();
+            return <Navigate to="/login" replace />;
+        }
     } catch (err) {
-      setIsAuthorized(false);
+        localStorage.clear();
+        return <Navigate to="/login" replace />;
     }
-  }, []);
 
-  if (isAuthorized === null) {
-    return <div>Loading...</div>;
-  }
-
-  if (!isAuthorized) {
-    return <Navigate to="/Login" replace />;
-  }
-
-  return children;
+    return children;
 };
 
 function App() {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  return (
-    <Router>
-      {/* Navbar/Footer sirf tab dikhao jab token hai */}
-      {token && <Navbar />}
-      <Routes>
-        {/* Public Route - Login Page */}
-        <Route path="/Login" element={<Login />} />
+    return (
+        <Router>
+            <div className="app">
+                {/* Navbar only for logged-in users */}
+                {token && <Navbar />}
 
-        {/* ✅ Protected Routes */}
-        <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-        <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
-        <Route path="/complaints" element={<ProtectedRoute><CompalintPage /></ProtectedRoute>} />
-        <Route path="/Customers" element={<ProtectedRoute><CustomerPage /></ProtectedRoute>} />
-        <Route path="/Reports" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/Sensors" element={<ProtectedRoute><SencerPage /></ProtectedRoute>} />
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
 
-        {/* Default redirect */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-      {token && <Footer />}
-    </Router>
-  );
+                    {/* Protected Routes */}
+                    <Route
+                        path="/"
+                        element={
+                            <ProtectedRoute>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/billing"
+                        element={
+                            <ProtectedRoute>
+                                <BillingPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/complaints"
+                        element={
+                            <ProtectedRoute>
+                                <CompalintPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/customers"
+                        element={
+                            <ProtectedRoute>
+                                <CustomerPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/reports"
+                        element={
+                            <ProtectedRoute>
+                                <ReportPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/sencer"
+                        element={
+                            <ProtectedRoute>
+                                <SencerPage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Redirect unknown routes */}
+                    <Route path="*" element={<Navigate to={token ? "/" : "/login"} replace />} />
+                </Routes>
+
+                {/* Footer only for logged-in users */}
+                {token && <Footer />}
+            </div>
+        </Router>
+    );
 }
 
 export default App;

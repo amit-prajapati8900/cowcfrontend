@@ -58,7 +58,6 @@ export default function CustomerPage() {
       setBills(JSON.parse(savedBills));
     }
   };
-
   useEffect(() => {
     (async () => {
       await fetchCustomers();
