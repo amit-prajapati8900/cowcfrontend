@@ -1,76 +1,93 @@
-.sencer-page {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.sensor-dashboard-main {
+  background: radial-gradient(circle at 0% 0%, #090d16 0%, #0f172a 100%);
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-.hero-section {
-  background: rgba(255,255,255,0.95);
+/* Glassmorphic Top Nav Bar Panel */
+.top-nav-glass {
+  background: rgba(15, 23, 42, 0.8) !important;
   backdrop-filter: blur(20px);
-  padding: 3rem 0;
-  margin-bottom: 2rem;
-  border-radius: 0 0 2rem 2rem;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-subtitle {
-  font-size: 1.3rem;
-  color: #6c757d;
-}
-
-.status-indicators {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: flex-end;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 1.5rem;
-  background: white;
-  border-radius: 50px;
-  font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+/* Cyber Matrix Input Fields */
+.cyber-input {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 0px !important; /* Sharp Advance Look */
   transition: all 0.3s ease;
 }
 
-.status-item.online { border: 3px solid #28a745; }
-.status-item.alerts { border: 3px solid #dc3545; }
-
-.status-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+.cyber-input:focus {
+  border-color: #00b0ff !important;
+  box-shadow: 0 0 10px rgba(0, 176, 255, 0.25) !important;
+  background-color: rgba(15, 23, 42, 0.9) !important;
 }
 
-.stat-card {
-  background: rgba(255,255,255,0.95) !important;
-  backdrop-filter: blur(20px);
+.cyber-input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Sharp Telemetry Performance Card Items */
+.sensor-item-card {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0px !important; /* 100% Sharp Geometric Line */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sensor-item-card:hover {
+  transform: translateY(-8px);
+  border-color: #00b0ff !important;
+  box-shadow: 0 20px 40px rgba(0, 176, 255, 0.15) !important;
+}
+
+/* Metric Sub-pod boxes layout inside maps */
+.metric-box {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+}
+
+/* Linear Pulse Animation for Active System Nodes */
+.icon-pulse {
+  display: inline-flex;
+  animation: pulse-glow 2s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px #00b0ff); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 8px #00b0ff); }
+}
+
+/* Full Width Custom Progress Bar Core overrides */
+.custom-progress {
+  height: 8px !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0px !important;
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #0072ff 0%, #00d4ff 100%) !important;
   border: none !important;
-  border-radius: 20px !important;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
-  height: 140px;
-  cursor: pointer;
+  border-radius: 0px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  transition: all 0.3s !important;
 }
 
-.stat-card:hover {
-  transform: translateY(-15px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.2) !important;
+.btn-gradient:hover {
+  box-shadow: 0 8px 24px rgba(0, 176, 255, 0.4) !important;
+  transform: translateY(-1px);
 }
-
-.stat-card.total { border-top: 5px solid #007bff !important; }
-.stat-card.online { border-top: 5px solid #28a745 !important; }
-.stat-card.alert { border-top: 5px solid #dc3545 !important; } 

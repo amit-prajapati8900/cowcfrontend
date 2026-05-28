@@ -2,17 +2,34 @@ import React, { useState, useEffect } from "react";
 import { 
   Box, Container, Paper, Tabs, Tab, Typography, TextField, 
   Button, Grid, MenuItem, CircularProgress,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import PrintIcon from '@mui/icons-material/Print';
+import { styled } from '@mui/material/styles';
 import axios from "axios";
 
-// Components
+// Core Layout Extra Subcomponents
 import Customer from "../Customer/Customer";
 import Status from "../Customer/Status";
 import CustomerTable from "../Customer/CustomerTable";
 
-const useBillingForm = (onBillGenerate) => {
+const MainHeaderPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: "24px",
+  background: "linear-gradient(135deg, #0f2027 0%, #203a43 100%)",
+  color: "#ffffff",
+  boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+  textAlign: 'center',
+}));
+
+const CustomTabsWrapper = styled(Paper)({
+  borderRadius: "16px",
+  padding: "6px",
+  backgroundColor: "#ffffff",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+});
+
+const useBillingFormHook = (onBillGenerate) => {
   const initialFormState = {
     customerId: "",
     customerName: "",
@@ -62,7 +79,6 @@ const useBillingForm = (onBillGenerate) => {
   return { formData, handleChange, handleSubmit };
 };
 
-// ✅ Helper function to get auth header
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
   return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
@@ -77,18 +93,16 @@ export default function BillingTable() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        // ✅ Token add kiya header mein
         const res = await axios.get("http://localhost:2323/show", getAuthHeader());
         setCustomers(res.data.data.map(c => ({ ...c, id: c._id })));
       } catch (err) { 
         console.error("Error fetching customers:", err);
         if(err.response?.status === 401){
-           alert("_session expired! Please login again.");
-           localStorage.removeItem("token");
+           alert("Session expired! Please login again.");
+           localStorage.clear();
            window.location.href = "/Login";
         }
-      } 
-      finally { setLoading(false); }
+      } finally { setLoading(false); }
     };
     
     const savedBills = localStorage.getItem('electricityBills');
@@ -100,10 +114,9 @@ export default function BillingTable() {
     const updatedBills = [newBill, ...bills];
     setBills(updatedBills);
     localStorage.setItem('electricityBills', JSON.stringify(updatedBills));
-    setTabValue(2);
+    setTabValue(2); // Automatically hop to History tab
   };
 
-  // ✅ Print Functionality
   const handlePrint = (bill) => {
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
@@ -111,25 +124,25 @@ export default function BillingTable() {
         <head>
           <title>Print Bill - ${bill.id}</title>
           <style>
-            body { font-family: sans-serif; padding: 20px; }
-            .bill-box { border: 1px solid #ccc; padding: 20px; width: 300px; margin: auto; }
-            h2 { text-align: center; color: #1976d2; }
-            .row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #eee; }
-            .total { font-weight: bold; font-size: 1.2em; margin-top: 10px; }
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 30px; background-color: #f9f9f9; }
+            .bill-box { border: 1px solid #e0e0e0; border-radius: 12px; padding: 30px; width: 350px; margin: auto; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+            h2 { text-align: center; color: #1976d2; margin-top:0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+            .row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #f0f0f0; padding-bottom: 8px; font-size: 14px; color: #444; }
+            .total { font-weight: bold; font-size: 1.2em; margin-top: 15px; border-bottom: none; color: #2e7d32; }
           </style>
         </head>
         <body>
           <div class="bill-box">
-            <h2>Electricity Bill</h2>
-            <div class="row"><span>Bill ID:</span> <span>${bill.id}</span></div>
+            <h2>Water Corporation</h2>
+            <div class="row"><span>Invoice ID:</span> <strong>${bill.id}</strong></div>
             <div class="row"><span>Date:</span> <span>${bill.date}</span></div>
-            <div class="row"><span>Customer:</span> <span>${bill.customerName}</span></div>
+            <div class="row"><span>Customer Name:</span> <span>${bill.customerName}</span></div>
             <div class="row"><span>Prev Reading:</span> <span>${bill.prevReading}</span></div>
             <div class="row"><span>Curr Reading:</span> <span>${bill.currReading}</span></div>
-            <div class="row"><span>Units Used:</span> <span>${bill.units}</span></div>
-            <div class="row"><span>Rate:</span> <span>₹${bill.rate}</span></div>
+            <div class="row"><span>Units Used:</span> <span>${bill.units} M³</span></div>
+            <div class="row"><span>Rate per Unit:</span> <span>₹${bill.rate}</span></div>
             <div class="row total"><span>Total Amount:</span> <span>₹${bill.total}</span></div>
-            <p style="text-align:center; font-size: 12px; margin-top: 20px;">Thank You!</p>
+            <p style="text-align:center; font-size: 11px; margin-top: 25px; color:#888;">Thank you for saving water.</p>
           </div>
         </body>
       </html>
@@ -138,65 +151,88 @@ export default function BillingTable() {
     printWindow.print();
   };
 
-  const billingForm = useBillingForm(handleBillGenerate);
+  const billingForm = useBillingFormHook(handleBillGenerate);
 
-  if (loading) return <Box sx={{ textAlign: 'center', mt: 10 }}><CircularProgress /></Box>;
+  if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}><CircularProgress /></Box>;
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f5f5f5", py: 4 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#f8f9fa", py: 6 }}>
       <Container maxWidth="xl">
-        <Paper elevation={3} sx={{ p: 4, mb: 4, textAlign: 'center' }}>
-          <Typography variant="h3" color="primary" fontWeight="bold">⚡ Billing System</Typography>
-        </Paper>
+        {/* Branding Core Header */}
+        <MainHeaderPaper elevation={0} sx={{ mb: 4 }}>
+          <Typography variant="h3" fontWeight="900" letterSpacing="0.5px">⚡ Billing Control Center</Typography>
+          <Typography variant="body1" sx={{ opacity: 0.7, mt: 1 }}>Manage real-time analytics, consumer accounts and automatic invoice prints</Typography>
+        </MainHeaderPaper>
 
-        <Paper sx={{ mb: 4 }}>
-          <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} variant="fullWidth">
-            <Tab label="Customers" />
-            <Tab label="New Bill" />
-            <Tab label="History" />
-            <Tab label="Table" />
+        {/* Dynamic Navigation Tabs */}
+        <CustomTabsWrapper elevation={0} sx={{ mb: 4 }}>
+          <Tabs 
+            value={tabValue} 
+            onChange={(e, v) => setTabValue(v)} 
+            variant="fullWidth"
+            sx={{
+              "& .MuiTabs-indicator": { height: "100%", borderRadius: "12px", zIndex: 0, opacity: 0.08, backgroundColor: "#1976d2" },
+              "& .MuiTab-root": { fontWeight: "700", textTransform: "none", fontSize: "15px", zIndex: 1 }
+            }}
+          >
+            <Tab label="👥 Consumer Registry" />
+            <Tab label="🧾 New Statement" />
+            <Tab label="⏳ Invoice History" />
+            <Tab label="📊 Grid View Table" />
           </Tabs>
-        </Paper>
+        </CustomTabsWrapper>
 
-        {/* New Bill Form Tab */}
+        {/* Form Deployment Structure */}
         {tabValue === 1 && (
-          <Paper sx={{ p: 4, maxWidth: 700, mx: 'auto' }}>
+          <Paper sx={{ p: 4, maxWidth: 700, mx: 'auto', borderRadius: "20px", boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
             <form onSubmit={billingForm.handleSubmit}>
               <Grid container spacing={3}>
-                <Grid item xs={6}><TextField label="ID" name="customerId" value={billingForm.formData.customerId} onChange={billingForm.handleChange} fullWidth required /></Grid>
-                <Grid item xs={6}><TextField label="Name" name="customerName" value={billingForm.formData.customerName} onChange={billingForm.handleChange} fullWidth required /></Grid>
-                <Grid item xs={6}><TextField label="Previous" name="prevReading" type="number" value={billingForm.formData.prevReading} onChange={billingForm.handleChange} fullWidth required /></Grid>
-                <Grid item xs={6}><TextField label="Current" name="currReading" type="number" value={billingForm.formData.currReading} onChange={billingForm.handleChange} fullWidth required /></Grid>
-                <Grid item xs={12}><Button type="submit" variant="contained" fullWidth>Generate Bill</Button></Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Consumer ID" name="customerId" value={billingForm.formData.customerId} onChange={billingForm.handleChange} fullWidth required InputProps={{ borderRadius: "12px" }} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Consumer Name" name="customerName" value={billingForm.formData.customerName} onChange={billingForm.handleChange} fullWidth required />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Previous Run Value" name="prevReading" type="number" value={billingForm.formData.prevReading} onChange={billingForm.handleChange} fullWidth required />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Current Run Value" name="currReading" type="number" value={billingForm.formData.currReading} onChange={billingForm.handleChange} fullWidth required />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button type="submit" variant="contained" size="large" fullWidth sx={{ py: 1.5, borderRadius: "12px", fontWeight: "700" }}>
+                    Process Current Invoice
+                  </Button>
+                </Grid>
               </Grid>
             </form>
           </Paper>
         )}
 
-        {/* ✅ History Tab as Row/Column Table */}
+        {/* Statements Logging Grid */}
         {tabValue === 2 && (
-          <TableContainer component={Paper} elevation={3}>
+          <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "20px", border: "1px solid #f0f0f0", overflow: "hidden" }}>
             <Table>
-              <TableHead sx={{ bgcolor: '#1976d2' }}>
+              <TableHead sx={{ bgcolor: '#203a43' }}>
                 <TableRow>
-                  <TableCell sx={{ color: '#fff' }}>Bill ID</TableCell>
-                  <TableCell sx={{ color: '#fff' }}>Customer</TableCell>
-                  <TableCell sx={{ color: '#fff' }}>Units</TableCell>
-                  <TableCell sx={{ color: '#fff' }}>Total (₹)</TableCell>
-                  <TableCell sx={{ color: '#fff' }}>Date</TableCell>
-                  <TableCell sx={{ color: '#fff' }} align="center">Action</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Bill ID</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Customer</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Units (M³)</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Total (₹)</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Generated Date</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: "700" }} align="center">Operations</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {bills.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} align="center">No History</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} align="center" sx={{ py: 8, color: "text.secondary" }}>No statements parsed in local workspace records.</TableCell></TableRow>
                 ) : (
                   bills.map((bill) => (
-                    <TableRow key={bill.id} hover>
-                      <TableCell>{bill.id}</TableCell>
+                    <TableRow key={bill.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableCell sx={{ fontWeight: "600" }}>{bill.id}</TableCell>
                       <TableCell>{bill.customerName}</TableCell>
                       <TableCell>{bill.units}</TableCell>
-                      <TableCell><strong>₹{bill.total}</strong></TableCell>
+                      <TableCell sx={{ color: '#2e7d32', fontWeight: "700" }}>₹{bill.total}</TableCell>
                       <TableCell>{bill.date}</TableCell>
                       <TableCell align="center">
                         <Button 
@@ -204,8 +240,9 @@ export default function BillingTable() {
                           startIcon={<PrintIcon />} 
                           onClick={() => handlePrint(bill)}
                           size="small"
+                          sx={{ borderRadius: "8px", textTransform: "none", fontWeight: "600" }}
                         >
-                          Print
+                          Print Voucher
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -216,10 +253,11 @@ export default function BillingTable() {
           </TableContainer>
         )}
 
+        {/* Tab Components Redirection Layer */}
         {tabValue === 0 && <Customer customers={customers} />}
         {tabValue === 3 && <CustomerTable customers={customers} />}
 
-        <Box sx={{ mt: 4 }}><Status customers={customers} /></Box>
+        <Box sx={{ mt: 5 }}><Status customers={customers} /></Box>
       </Container>
     </Box>
   );

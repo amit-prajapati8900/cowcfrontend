@@ -7,7 +7,41 @@ import {
   Typography,
   MenuItem,
   Alert,
+  Box,
+  InputAdornment
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import PhoneAndroidOutlinedIcon from '@mui/icons-material/PhoneAndroidOutlined';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
+const ModernFormCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: "20px",
+  backgroundColor: "#ffffff",
+  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+  border: "1px solid rgba(0, 0, 0, 0.05)",
+  transition: "all 0.3s ease-in-out",
+  "&:hover": {
+    boxShadow: "0 15px 40px rgba(42, 82, 152, 0.1)",
+  }
+}));
+
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: "12px",
+    transition: "all 0.2s ease-in-out",
+    "&:hover fieldset": {
+      borderColor: "rgba(42, 82, 152, 0.4)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#2a5298",
+      boxShadow: "0 0 8px rgba(42, 82, 152, 0.15)",
+    },
+  },
+});
 
 const ComplaintForm = ({ onComplaintRegistered }) => {
   const [complaintData, setComplaintData] = useState({
@@ -16,7 +50,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
     contact: "",
     type: "",
     description: "",
-    status: "pending",   // backend enum ke hisaab se lowercase
+    status: "pending",
   });
 
   const [formError, setFormError] = useState("");
@@ -37,7 +71,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
       return;
     }
     if (!complaintData.description.trim()) {
-      setFormError("Please enter description");
+      setFormError("Please enter a detailed description");
       return;
     }
 
@@ -57,9 +91,8 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
       const savedComplaint = await response.json();
       onComplaintRegistered(savedComplaint);
 
-      setSuccessMsg("Complaint registered successfully!");
+      setSuccessMsg("Grievance ticket logged successfully into database!");
 
-      // Reset form
       setComplaintData({
         customerId: "",
         customerName: "",
@@ -70,38 +103,23 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
       });
     } catch (err) {
       console.error(err);
-      setFormError("Error saving complaint. Please try again.");
+      setFormError("Error saving ticket. Please try again.");
     }
   };
 
   return (
-    <Paper
-      elevation={6}
-      sx={{
-        padding: 4,
-        maxWidth: 750,
-        margin: "40px auto",
-        borderRadius: 4,
-        background: "linear-gradient(135deg, #e3f2fd, #ffffff)",
-      }}
-    >
-      <Typography
-        variant="h4"
-        gutterBottom
-        align="center"
-        fontWeight="bold"
-        color="primary"
-      >
-        Register New Complaint
+    <ModernFormCard elevation={0}>
+      <Typography variant="h5" fontWeight="700" sx={{ mb: 3, color: "#1e3c72" }}>
+        Register Your Complaint Statement
       </Typography>
 
-      {formError && <Alert severity="error" sx={{ mb: 2 }}>{formError}</Alert>}
-      {successMsg && <Alert severity="success" sx={{ mb: 2 }}>{successMsg}</Alert>}
+      {formError && <Alert severity="error" variant="filled" sx={{ mb: 3, borderRadius: "10px" }}>{formError}</Alert>}
+      {successMsg && <Alert severity="success" variant="filled" sx={{ mb: 3, borderRadius: "10px" }}>{successMsg}</Alert>}
 
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <TextField
+            <StyledTextField
               label="Customer ID"
               name="customerId"
               value={complaintData.customerId}
@@ -109,62 +127,94 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               fullWidth
               required
               type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <BadgeOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
+            <StyledTextField
               label="Customer Name"
               name="customerName"
               value={complaintData.customerName}
               onChange={handleChange}
               fullWidth
               required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircleOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              label="Contact Number"
+            <StyledTextField
+              label="Registered Contact Number"
               name="contact"
               value={complaintData.contact}
               onChange={handleChange}
               fullWidth
               required
               type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneAndroidOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
+            <StyledTextField
               select
-              label="Complaint Type *"
+              label="Complaint Category"
               name="type"
               value={complaintData.type}
               onChange={handleChange}
               fullWidth
               required
-              SelectProps={{ displayEmpty: true }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <CategoryOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             >
-              <MenuItem value="" disabled>
-                -- Select Complaint Type --
-              </MenuItem>
+              <MenuItem value="" disabled>-- Select Complaint Type --</MenuItem>
               <MenuItem value="Billing">Billing Issue</MenuItem>
               <MenuItem value="Service Related">Service Related</MenuItem>
               <MenuItem value="Meter">Meter Problem</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
-            </TextField>
+              <MenuItem value="Other">Other Issues</MenuItem>
+            </StyledTextField>
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
-              label="Description"
+            <StyledTextField
+              label="Elaborate Complaint Details"
               name="description"
               value={complaintData.description}
               onChange={handleChange}
               fullWidth
               multiline
-              rows={5}
+              rows={4}
               required
-              placeholder="Describe your complaint in detail..."
+              placeholder="Describe your infrastructure problem in detail..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 1.5 }}>
+                    <DescriptionOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
 
@@ -172,17 +222,30 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
               size="large"
               fullWidth
-              sx={{ py: 1.5, fontWeight: "bold", borderRadius: 3, boxShadow: 3 }}
+              sx={{
+                py: 1.5,
+                borderRadius: "12px",
+                fontWeight: "700",
+                fontSize: "16px",
+                textTransform: "none",
+                background: "linear-gradient(90deg, #1e3c72 0%, #2a5298 100%)",
+                boxShadow: "0 4px 14px rgba(30, 60, 114, 0.3)",
+                transition: "all 0.2s",
+                "&:hover": {
+                  background: "linear-gradient(90deg, #162e59 0%, #1f3e75 100%)",
+                  boxShadow: "0 6px 20px rgba(30, 60, 114, 0.4)",
+                  transform: "translateY(-1px)",
+                },
+              }}
             >
-              Register Complaint
+              Register Your Complaint
             </Button>
           </Grid>
         </Grid>
       </form>
-    </Paper>
+    </ModernFormCard>
   );
 };
 
