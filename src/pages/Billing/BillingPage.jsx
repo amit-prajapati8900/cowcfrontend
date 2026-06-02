@@ -5,7 +5,7 @@ import BillingTable from "./BillingTable";
 
 export default function App() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f8f9fa" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#07111e" }}>
       <BillingTable />
     </Box>
   );

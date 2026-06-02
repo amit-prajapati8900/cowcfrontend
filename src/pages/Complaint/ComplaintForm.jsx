@@ -11,6 +11,7 @@ import {
   InputAdornment
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import api from '../../axiosConfig';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import PhoneAndroidOutlinedIcon from '@mui/icons-material/PhoneAndroidOutlined';
@@ -18,6 +19,8 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 const ModernFormCard = styled(Paper)(({ theme }) => ({
+  position: 'relative',
+  zIndex: 1,
   padding: theme.spacing(4),
   borderRadius: "20px",
   backgroundColor: "#ffffff",
@@ -76,19 +79,13 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:2323/comp/new", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...complaintData,
-          customerId: Number(complaintData.customerId),
-          contact: Number(complaintData.contact),
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to save complaint");
-
-      const savedComplaint = await response.json();
+      const payload = {
+        ...complaintData,
+        customerId: Number(complaintData.customerId),
+        contact: Number(complaintData.contact),
+      };
+      const res = await api.post('https://cowcback.onrender.com/comp/new', payload);
+      const savedComplaint = res.data.complaint || res.data;
       onComplaintRegistered(savedComplaint);
 
       setSuccessMsg("Grievance ticket logged successfully into database!");
@@ -129,7 +126,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               type="number"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
                     <BadgeOutlinedIcon />
                   </InputAdornment>
                 ),
@@ -146,7 +143,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               required
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
                     <AccountCircleOutlinedIcon />
                   </InputAdornment>
                 ),
@@ -164,7 +161,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               type="number"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
                     <PhoneAndroidOutlinedIcon />
                   </InputAdornment>
                 ),
@@ -183,7 +180,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               required
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
                     <CategoryOutlinedIcon />
                   </InputAdornment>
                 ),
@@ -210,7 +207,7 @@ const ComplaintForm = ({ onComplaintRegistered }) => {
               placeholder="Describe your infrastructure problem in detail..."
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 1.5 }}>
+                  <InputAdornment position="start" sx={{ alignSelf: "flex-start", mt: 1.5, pointerEvents: 'none' }}>
                     <DescriptionOutlinedIcon />
                   </InputAdornment>
                 ),

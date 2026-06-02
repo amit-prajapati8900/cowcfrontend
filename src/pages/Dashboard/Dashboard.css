@@ -1,0 +1,134 @@
+
+.dashboard-page {
+  padding: 24px 12px;
+}
+
+.dashboard-title {
+  margin-bottom: 16px;
+  font-weight: 600;
+  
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stats-card {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.92);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.stats-icon {
+  font-size: 22px;
+  color: #1976d2;
+  margin-right: 12px;
+}
+
+.stats-info .stats-title {
+  font-size: 13px;
+  color: #666;
+}
+
+.stats-info .stats-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.chart-card {
+  background: rgba(15, 23, 42, 0.95);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.card-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .stats-row { flex-direction: column; }
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+.items-section { margin-top: 18px; }
+.items-table { display: flex; flex-direction: column; gap: 10px; }
+.item-row { background: rgba(15, 23, 42, 0.96); padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);} 
+.item-main { display:flex; justify-content:space-between; align-items:center; }
+.muted { color:#666; font-size:12px; }
+.action-btns button { min-width:72px; }
+.item-details { padding:8px 0; color:#333; }
+.item-edit { padding-top:8px; }
+
+
+
+
+
+
+
+/* Dashboard Global Layout System Override */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: #07111e;
+
+}
+
+/* Fluid Graph Customization Classes */
+.recharts-cartesian-grid-horizontal line, 
+.recharts-cartesian-grid-vertical line {
+  stroke: #f1f5f9 !important;
+}
+
+.recharts-default-tooltip {
+  background-color: #0f172a !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+  color: #fff !important;
+}
+
+/* Customized Scrollbar for Large Enterprise Data Matrices */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Material UI Native Table Interception Styling */
+.MuiTableCell-root {
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 16px 20px !important;
+  font-size: 0.875rem !important;
+}
+
+.MuiTableRow-hover:hover {
+  background-color: #f8fafc !important;
+}

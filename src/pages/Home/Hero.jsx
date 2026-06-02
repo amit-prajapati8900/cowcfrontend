@@ -194,7 +194,7 @@ export default function Hero() {
                 {/* ACTION BUTTONS */}
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
                   <Button 
-                    component={Link} to="/Login" variant="contained" size="large" endIcon={<ArrowForwardIcon />}
+                    component={Link} to="https://cowcback.onrender.com/Login" variant="contained" size="large" endIcon={<ArrowForwardIcon />}
                     sx={{ 
                       px: 5, py: 2, borderRadius: "0px", fontSize: "1rem", fontWeight: 800, textTransform: "none",
                       background: "linear-gradient(90deg, #00b0ff, #00d4ff)",
@@ -204,17 +204,22 @@ export default function Hero() {
                   >
                     Access Terminal
                   </Button>
-
-                  <Button 
-                    component={Link} to="/dashboard" variant="outlined" size="large" startIcon={<AssessmentOutlinedIcon />}
-                    sx={{ 
-                      px: 5, py: 2, borderRadius: "0px", fontSize: "1rem", fontWeight: 800, textTransform: "none",
-                      borderWidth: "2px", color: "#fff", borderColor: "rgba(255,255,255,0.3)",
-                      "&:hover": { borderColor: "#00b0ff", border: "2px solid #00b0ff", borderWidth: "2px", background: "rgba(0, 176, 255, 0.08)" }
-                    }}
-                  >
-                    Dashboard
-                  </Button>
+<Button 
+  variant="outlined" 
+  size="large" 
+  startIcon={<AssessmentOutlinedIcon />}
+  onClick={() => window.open('https://cowcback.onrender.com/dashboard', '_blank')}   // ← Fixed
+  sx={{
+    px: 5, py: 2, borderRadius: "0px", fontSize: "1rem", fontWeight: 800, textTransform: "none",
+    borderColor: '#00b0ff', color: '#00b0ff',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 176, 255, 0.08)',
+      borderColor: '#00b0ff',
+    },
+  }}
+>
+  Dashboard
+</Button>
                 </Stack>
               </Box>
             </Grid>
@@ -244,7 +249,7 @@ export default function Hero() {
               { 
                 title: "Billing System", 
                 img: "tpk.png", 
-                path: "/show", // 🟢 यहाँ सीधे /show राउट फिक्स कर दिया है
+                path: "https://cowcback.onrender.com/show", // 🟢 यहाँ सीधे /show राउट फिक्स कर दिया है
                 desc: "Automated bill generation, payment processing, ledger caching, statement printing, tariff management, and revenue tracking algorithms.",
                 icon: <ReceiptLongIcon sx={{ fontSize: 40 }} />,
                 color: "#00b0ff"
@@ -252,7 +257,7 @@ export default function Hero() {
               { 
                 title: "Customers", 
                 img: "costomer.jpg", 
-                path: "/customers", // 🟢 राउट फिक्स
+                path: "https://cowcback.onrender.com/customers", // 🟢 राउट फिक्स
                 desc: "Centralized consumer database management, profile mapping, connection allocation, service activation, and account analytics.",
                 icon: <PeopleIcon sx={{ fontSize: 40 }} />,
                 color: "#22c55e"
@@ -260,7 +265,7 @@ export default function Hero() {
               { 
                 title: "Complaints", 
                 img: "puri.png", 
-                path: "/complaints", // 🟢 राउट फिक्स
+                path: "https://cowcback.onrender.com/complaints", // 🟢 राउट फिक्स
                 desc: "Real-time grievance ticketing system, pressure anomaly detection, dispatch queue management, and automated escalation workflows.",
                 icon: <WarningAmberIcon sx={{ fontSize: 40 }} />,
                 color: "#f59e0b"
@@ -268,7 +273,7 @@ export default function Hero() {
               { 
                 title: "Reports", 
                 img: "pp.png", 
-                path: "/reports", // 🟢 राउट फिक्स
+                path: "https://cowcback.onrender.com/reports", // 🟢 राउट फिक्स
                 desc: "Comprehensive analytics dashboard, consumption charts, revenue forecasting, asset management reports, and data export pipelines.",
                 icon: <DescriptionIcon sx={{ fontSize: 40 }} />,
                 color: "#8b5cf6"

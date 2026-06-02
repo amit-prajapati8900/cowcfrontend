@@ -35,7 +35,7 @@ export default function CustomerPage() {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:2323/show", {
+      const res = await axios.get("https://cowcback.onrender.com/show", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -50,7 +50,7 @@ export default function CustomerPage() {
       if (err.response && err.response.status === 401) {
         alert("Session expired! Please login again.");
         localStorage.clear();
-        window.location.href = "/Login";
+        window.location.href = "https://cowcback.onrender.com/Login";
       } else {
         alert("Failed to load customers!");
       }
@@ -72,7 +72,7 @@ export default function CustomerPage() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f8f9fa", py: 5 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#07111e", py: 5 }}>
       <Container maxWidth="xl">
         {/* Modern Branding Header */}
         <MainHeaderBanner elevation={0}>
@@ -113,7 +113,7 @@ export default function CustomerPage() {
         )}
 
         {tabValue === 1 && (
-          <Paper elevation={0} sx={{ p: 3, borderRadius: "20px", border: "1px solid #f0f0f0", boxShadow: "0 8px 24px rgba(0,0,0,0.02)" }}>
+          <Paper elevation={0} sx={{ p: 3, borderRadius: "20px", border: "1px solid rgba(148,163,184,0.18)", bgcolor: "#0f172a", boxShadow: "0 12px 30px rgba(0,0,0,0.24)" }}>
             <Box sx={{ width: "100%", height: 550 }}>
               <CustomerTable customers={customers} />
             </Box>

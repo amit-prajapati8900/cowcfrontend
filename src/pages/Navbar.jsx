@@ -17,7 +17,7 @@ import SmsIcon from '@mui/icons-material/Sms';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Drawer, List, ListItem, ListItemButton, ListItemText, Button, Avatar, Tooltip } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../axiosConfig';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -75,9 +75,7 @@ export default function Navbar() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await axios.get("http://localhost:2323/api/alerts-count", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('https://cowcback.onrender.com/api/alerts-count');
       
       if (response.data.success) {
         setComplaintCount(response.data.newComplaints || 0);
@@ -119,11 +117,11 @@ export default function Navbar() {
     const checkExpiry = () => {
       const loginTime = localStorage.getItem("loginTime");
       if (token && loginTime) {
-        const ONE_MINUTE = 60 * 1000;
-        if (Date.now() - Number(loginTime) > ONE_MINUTE) {
+        const TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000;
+        if (Date.now() - Number(loginTime) > TOKEN_EXPIRY_MS) {
           localStorage.clear();
           setIsLoggedIn(false);
-          alert("Your 1-minute session has expired! Redirecting to login...");
+          alert("Your session has expired. Redirecting to login...");
           window.location.href = "/Login";
         }
       }

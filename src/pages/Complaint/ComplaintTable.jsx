@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from '../../axiosConfig';
 import {
   Paper,
   Table,
@@ -20,9 +20,8 @@ const ComplaintTable = ({ refreshTrigger, newlyAddedComplaints }) => {
 
   const fetchComplaints = async () => {
     try {
-      const res = await axios.get("http://localhost:2323/comp");
-      // Check validation context: Handle if backend sends single object vs array wrapper
-      const data = Array.isArray(res.data) ? res.data : res.data.data || [];
+      const res = await api.get('https://cowcback.onrender.com/comp');
+      const data = Array.isArray(res.data) ? res.data : res.data.data || res.data || [];
       setComplaints(data);
     } catch (err) {
       console.error("Error fetching complaints:", err);
@@ -44,9 +43,9 @@ const ComplaintTable = ({ refreshTrigger, newlyAddedComplaints }) => {
   }, [newlyAddedComplaints]);
 
   return (
-    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "20px", border: "1px solid #f0f0f0", overflow: "hidden" }}>
-      <Box sx={{ p: 3, bgcolor: "#ffffff", borderBottom: "1px solid #f5f5f5" }}>
-        <Typography variant="h6" fontWeight="700" color="text.primary">
+    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "20px", border: "1px solid rgba(148,163,184,0.18)", overflow: "hidden", bgcolor: "#0f172a" }}>
+      <Box sx={{ p: 3, bgcolor: "#0b1524", borderBottom: "1px solid rgba(148,163,184,0.18)" }}>
+        <Typography variant="h6" fontWeight="700" color="#e2e8f0">
           Registered Complaints ({complaints.length})
         </Typography>
       </Box>

@@ -12,7 +12,7 @@ import BillingPage from './pages/Billing/BillingPage';
 import CompalintPage from './pages/Complaint/CompalintPage';
 import CustomerPage from './pages/Customer/CustomerPage';
 import ReportPage from './pages/Reports/ReportPage';
-import Dashboard from './pages/Dashboards/Dashboard';
+// import Dashboard from './pages/Dashboards/Dashboard';
 import SencerPage from './pages/Sencer/SencerPage';
 import Login from './pages/Login/Login.jsx'; // ← Naya Login Page
 
@@ -20,6 +20,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
 import "./index.css";
+import Dashboard from './pages/Dashboard/Dashboard';
+import AdminDashboard from './pages/Dashboard/AdminDashboard';
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
         {/* ===================== PUBLIC ROUTES ===================== */}
         <Route path="/" element={<HomePage />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         {/* ===================== PROTECTED ROUTES ===================== */}
         {/* Kisi bhi page ko access karne ke liye valid token zaroori hai */}
@@ -37,7 +40,8 @@ function App() {
         <Route path="/complaints" element={<ProtectedRoute><CompalintPage /></ProtectedRoute>} />
         <Route path="/customers" element={<ProtectedRoute><CustomerPage /></ProtectedRoute>} />
         <Route path="/reports" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
         <Route path="/sensors" element={<ProtectedRoute><SencerPage /></ProtectedRoute>} />
       </Routes>
       <Footer />

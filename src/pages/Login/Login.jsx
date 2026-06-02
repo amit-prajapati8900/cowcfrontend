@@ -91,7 +91,7 @@ export default function Login() {
     try {
       if (tabValue === 0) {
         // ==================== LOGIN FLOW ====================
-        const res = await axios.post("http://localhost:2323/login", {
+        const res = await axios.post("https://cowcback.onrender.com/login", {
           email: formData.email,
           password: formData.password,
         });
@@ -110,11 +110,12 @@ export default function Login() {
           localStorage.setItem("userId", userId);
           localStorage.setItem("userName", userName);
 
-          window.location.href = "/customers";
+          const redirectPath = res.data.user?.isAdmin ? "/admin" : "/customers";
+          window.location.href = redirectPath;
         }
       } else {
         // ==================== SIGNUP FLOW ====================
-        const res = await axios.post("http://localhost:2323/signup", formData);
+        const res = await axios.post("https://cowcback.onrender.com/signup", formData);
      
         setSuccess(res.data.message + " Please log in.");
         setTabValue(0); 

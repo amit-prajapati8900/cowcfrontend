@@ -19,10 +19,13 @@ import { styled } from "@mui/material/styles";
 const StyledSearchField = styled(TextField)({
   "& .MuiOutlinedInput-root": {
     borderRadius: "12px",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "rgba(15, 23, 42, 0.95)",
     transition: "all 0.2s",
-    "&:hover fieldset": { borderColor: "rgba(0,0,0,0.2)" },
-    "&.Mui-focused fieldset": { borderColor: "#1976d2", backgroundColor: "#ffffff" }
+    "&:hover fieldset": { borderColor: "rgba(56,189,248,0.35)" },
+    "&.Mui-focused fieldset": { borderColor: "#3b82f6", backgroundColor: "rgba(15, 23, 42, 0.98)" }
+  },
+  "& .MuiInputBase-input": {
+    color: "#e2e8f0"
   }
 });
 
@@ -150,7 +153,7 @@ export default function CustomerTable({ customers }) {
         elevation={0} 
         sx={{ 
           borderRadius: "20px", 
-          border: "1px solid #eef2f5", 
+          border: "1px solid rgba(148,163,184,0.18)", 
           overflow: "hidden",
           '@media print': {
             border: 'none !important',
@@ -168,8 +171,8 @@ export default function CustomerTable({ customers }) {
             gap: 2, 
             justifyContent: 'space-between', 
             alignItems: 'center', 
-            borderBottom: "1px solid #f5f5f5", 
-            bgcolor: "#ffffff",
+            borderBottom: "1px solid rgba(148,163,184,0.18)", 
+            bgcolor: "#0b1524",
             '@media print': {
               borderBottom: '2px solid #000000 !important',
               pb: 1,
@@ -212,7 +215,7 @@ export default function CustomerTable({ customers }) {
             />
 
             {/* Clean Action Icons Panel */}
-            <Box sx={{ border: "1px solid #e0e0e0", borderRadius: "12px", p: "3px", display: "flex", gap: "2px", bgcolor: "#f8f9fa" }}>
+            <Box sx={{ border: "1px solid rgba(148,163,184,0.18)", borderRadius: "12px", p: "3px", display: "flex", gap: "2px", bgcolor: "#0b1524" }}>
               <Tooltip title="Print Grid View"><IconButton onClick={handlePrint} size="small" color="primary"><PrintIcon fontSize="small" /></IconButton></Tooltip>
               <Tooltip title="Extract XLS Sheet"><IconButton onClick={exportToExcel} size="small" color="success"><ExcelIcon fontSize="small" /></IconButton></Tooltip>
               <Tooltip title="Compile PDF Statement"><IconButton onClick={exportToPDF} size="small" color="error"><PdfIcon fontSize="small" /></IconButton></Tooltip>
@@ -241,7 +244,7 @@ export default function CustomerTable({ customers }) {
             getRowId={(row) => row.id || Math.random()}
             sx={{
               border: "none",
-              [`& .${gridClasses.row}`]: { bgcolor: "white" },
+              [`& .${gridClasses.row}`]: { bgcolor: "#07111e" },
               [`& .super-app-theme--header`]: {
                 backgroundColor: "#203a43",
                 color: "#ffffff",
@@ -254,10 +257,10 @@ export default function CustomerTable({ customers }) {
                 }
               },
               '& .MuiDataGrid-cell': {
-                borderBottom: "1px solid #f5f5f5",
+                borderBottom: "1px solid rgba(148,163,184,0.12)",
                 display: "flex",
                 alignItems: "center",
-                color: "#4a5568",
+                color: "#e2e8f0",
                 '@media print': {
                   color: '#000000 !important',
                   borderBottom: '1px solid #ddd !important'

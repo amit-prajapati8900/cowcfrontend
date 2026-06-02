@@ -28,7 +28,7 @@ export default function ComplaintPage() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#f8f9fa", py: 4 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "#07111e", py: 4 }}>
       <Container maxWidth="xl">
         <ErrorBoundary>
           {/* Main Top Grid Banner */}

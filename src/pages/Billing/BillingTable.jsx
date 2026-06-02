@@ -25,8 +25,9 @@ const MainHeaderPaper = styled(Paper)(({ theme }) => ({
 const CustomTabsWrapper = styled(Paper)({
   borderRadius: "16px",
   padding: "6px",
-  backgroundColor: "#ffffff",
-  boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+  backgroundColor: "rgba(15, 23, 42, 0.95)",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.24)",
+  border: "1px solid rgba(148,163,184,0.18)",
 });
 
 const useBillingFormHook = (onBillGenerate) => {
@@ -93,14 +94,14 @@ export default function BillingTable() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const res = await axios.get("http://localhost:2323/show", getAuthHeader());
+        const res = await axios.get("https://cowcback.onrender.com/show", getAuthHeader());
         setCustomers(res.data.data.map(c => ({ ...c, id: c._id })));
       } catch (err) { 
         console.error("Error fetching customers:", err);
         if(err.response?.status === 401){
            alert("Session expired! Please login again.");
            localStorage.clear();
-           window.location.href = "/Login";
+           window.location.href = "https://cowcback.onrender.com/Login";
         }
       } finally { setLoading(false); }
     };
@@ -184,7 +185,7 @@ export default function BillingTable() {
 
         {/* Form Deployment Structure */}
         {tabValue === 1 && (
-          <Paper sx={{ p: 4, maxWidth: 700, mx: 'auto', borderRadius: "20px", boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+          <Paper sx={{ p: 4, maxWidth: 700, mx: 'auto', borderRadius: "20px", boxShadow: "0 12px 36px rgba(0,0,0,0.25)", bgcolor: "#0f172a", border: "1px solid rgba(148,163,184,0.18)" }}>
             <form onSubmit={billingForm.handleSubmit}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
@@ -211,9 +212,9 @@ export default function BillingTable() {
 
         {/* Statements Logging Grid */}
         {tabValue === 2 && (
-          <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "20px", border: "1px solid #f0f0f0", overflow: "hidden" }}>
+          <TableContainer component={Paper} elevation={0} sx={{ borderRadius: "20px", border: "1px solid rgba(148,163,184,0.18)", overflow: "hidden", bgcolor: "#0f172a" }}>
             <Table>
-              <TableHead sx={{ bgcolor: '#203a43' }}>
+              <TableHead sx={{ bgcolor: '#15313d' }}>
                 <TableRow>
                   <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Bill ID</TableCell>
                   <TableCell sx={{ color: '#fff', fontWeight: "700" }}>Customer</TableCell>

@@ -45,7 +45,7 @@ export default function Customer({ customers, setCustomers, liveUpdate, setLiveU
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Please login first!");
-      navigate("/Login");
+      navigate("https://cowcback.onrender.com/Login");
     }
   }, [navigate]);
 
@@ -58,7 +58,7 @@ export default function Customer({ customers, setCustomers, liveUpdate, setLiveU
 
     if (!token) {
       alert("Please login first!");
-      navigate("/Login");
+      navigate("https://cowcback.onrender.com/Login");
       return;
     }
 
@@ -69,7 +69,7 @@ export default function Customer({ customers, setCustomers, liveUpdate, setLiveU
 
     try {
       const res = await axios.post(
-        "http://localhost:2323/new",
+        "https://cowcback.onrender.com/new",
         {
           name: form.name,
           address: form.address,
@@ -90,7 +90,7 @@ export default function Customer({ customers, setCustomers, liveUpdate, setLiveU
       if (err.response?.status === 401) {
         alert("Session expired! Please login again.");
         localStorage.clear();
-        navigate("/Login");
+        navigate("https://cowcback.onrender.com/Login");
       } else {
         alert(err.response?.data?.message || "Error saving customer");
       }

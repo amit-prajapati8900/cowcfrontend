@@ -14,12 +14,33 @@ import {
 } from "react-icons/io5";
 import {
   MdRefresh, MdAddCircle, MdTrendingUp, MdSpeed, MdScience, MdOutlineOpacity,
-  MdWaterDrop as Droplet // 🟢 FIXED: Droplet icon import yahan add kar diya hai
+  MdWaterDrop as Droplet
 } from "react-icons/md";
 
 import StatsCard from "./LiveSensors";
 import { SensorAlerts } from './SensorAlerts';
 import './SensorDashboard.css';
+
+// 🟢 CONFIGURATION: API Base URI & Global Axios Authorization Architecture
+const API_BASE = 'https://cowcback.onrender.com';
+
+const sensorApi = axios.create({
+  baseURL: API_BASE
+});
+
+// Automatic Request Interceptor to dynamically inject Bearer tokens 
+sensorApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // Fetches runtime JWT from storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 const SensorCard = ({ sensor }) => (
   <Card className="sensor-item-card mb-4 shadow-sm">
@@ -105,12 +126,10 @@ const SensorDashboard = () => {
     deviceStatus: 'online'
   });
 
-  const API_BASE = 'http://localhost:2323';
-
   const fetchSensors = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_BASE}/sensor`);
+      const res = await sensorApi.get('https://cowcback.onrender.com/sensor');
       const data = res.data.data || res.data || [];
       setSensors(data);
       
@@ -162,12 +181,28 @@ const SensorDashboard = () => {
     };
 
     try {
-      await axios.post(`${API_BASE}/sensor/new`, payload);
+      await sensorApi.post('https://cowcback.onrender.com/sensor/new', payload);
       setShowForm(false);
       fetchSensors();
+      
+      // Form fields reset with new dynamic sequential hardware asset tag 
+      setFormData({
+        meterId: `MTR-${Math.floor(1000 + Math.random() * 9000)}`,
+        flowRate: '',
+        pressure: '',
+        volume: '',
+        phLevel: '7.2',
+        temperature: '24.5',
+        turbidity: '0.8',
+        consumerName: '',
+        address: '',
+        deviceStatus: 'online'
+      });
+      
       alert("IoT Smart Node Deployed Into Grid Tree Container!");
     } catch (err) {
-      alert("Deployment Rejected: Pipeline validation breach.");
+      console.error("Deployment Error Details:", err.response?.data || err.message);
+      alert(`Deployment Rejected: ${err.response?.data?.message || "Pipeline validation breach."}`);
     }
   };
 
@@ -175,7 +210,7 @@ const SensorDashboard = () => {
     <div className="sensor-dashboard-main pb-5">
       {/* Fixed Telemetry Top Navigation Glass Header */}
       <div className="top-nav-glass py-3 mb-5">
-        <Container fluid sx={{ px: { lg: 12 } }}>
+        <Container fluid className="px-lg-5">
           <Row className="align-items-center g-3">
             <Col md={4}>
               <h4 className="mb-0 fw-black d-flex align-items-center text-white tracking-wide uppercase">
@@ -208,7 +243,7 @@ const SensorDashboard = () => {
         </Container>
       </div>
 
-      <Container fluid sx={{ px: { lg: 12 } }}>
+      <Container fluid className="px-lg-5">
         {/* Core Live Analytics Grid Metrics Blocks */}
         <Row className="mb-5 g-4">
           <Col sm={6} md={3}>
@@ -227,7 +262,7 @@ const SensorDashboard = () => {
 
         {/* Dashboard Grid Analytics Canvas Workspace */}
         <Row>
-          <Col lg={8.5}>
+          <Col lg={9}>
             <div className="section-title d-flex justify-content-between align-items-center mb-4 border-bottom border-slate-800 pb-2">
               <h5 className="fw-black tracking-wider text-slate-400 text-uppercase mb-0">Active Infrastructure Node Grid Map</h5>
               <Badge bg="dark" className="text-info border border-info/30 px-3 py-1.5 font-mono" style={{ borderRadius: '0px' }}>
@@ -250,9 +285,9 @@ const SensorDashboard = () => {
           </Col>
 
           {/* Right Floating Alert Sidebar Desk Panels */}
-          <Col lg={3.5}>
+          <Col lg={3}>
             <SensorAlerts alerts={alerts} />
-            <Card className="border-0 shadow-2xl bg-slate-900 rounded-0" style={{ border: '1px solid rgba(255,255,255,0.05) !important' }}>
+            <Card className="border-0 shadow-2xl bg-slate-900 rounded-0" style={{ border: '1px solid rgba(255,255,255,0.05)' }}>
               <Card.Body className="p-4">
                 <h6 className="fw-black text-uppercase tracking-wider text-slate-400 mb-3"><MdTrendingUp className="me-2" color="#00b0ff"/>System Engine Diagnostics</h6>
                 <ProgressBar variant="info" now={94} className="my-3 custom-progress" />
